@@ -1,0 +1,49 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class User extends CI_Controller {
+    public function __construct(){
+        parent::__construct();
+        $this->load->model('userModel'); 
+        
+    }
+    
+    public function index(){
+        $data['user'] = $this->userModel->view();
+        $this->load->view('user/index', $data);
+        
+    }
+    
+    public function tambah(){
+        if($this->input->post('submit')){ 
+            if($this->userModel->validation("save")){ 
+                $this->userModel->save(); 
+                edirect('user');
+                }
+            }
+            
+            $this->load->view('user/form_tambah');
+            
+     }
+     
+     public function ubah($id){
+         if($this->input->post('submit')){ 
+             if($this->userModel->validation("update")){ 
+                 $this->userModel->edit($id); 
+                 redirect('user');       
+                  }             
+             }
+             $data['user'] = $this->userModel->view_by($id);
+             $this->load->view('user/form_ubah', $data);
+      }
+      
+      public function hapus($id){
+          $this->userModel->delete($id); 
+          redirect('user');
+          
+      }
+      
+      public function detail($id){
+          $data['user'] = $this->userModel->getUserById($id);
+          $this->load->view('user/detail', $data);		
+}
+}
